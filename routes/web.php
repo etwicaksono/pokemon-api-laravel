@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [Pokemon::class, "index"]);
+Route::get('/detail/{id}', [Pokemon::class, "detail"]);
