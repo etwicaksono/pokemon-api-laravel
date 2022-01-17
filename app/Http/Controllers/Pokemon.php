@@ -20,25 +20,25 @@ class Pokemon extends Controller
             $data[] = [
                 "id" => $id,
                 "name" => $res["name"],
-                "url" => $res["url"]
             ];
         }
 
-        return view('home', compact("data"));
+        return view('home', [
+            "data" => $data,
+            "next" => $response["next"]
+        ]);
     }
 
     public function myPokemon()
     {
+        $pokemon = MyPokemon::all();
         $response = Http::get("https://pokeapi.co/api/v2/pokemon")->json();
 
         $data = [];
-        foreach ($response["results"] as $res) {
-            $temp = explode("/", trim($res["url"], "/"));
-            $id = $temp[count($temp) - 1];
+        foreach ($pokemon as $poke) {
             $data[] = [
-                "id" => $id,
-                "name" => $res["name"],
-                "url" => $res["url"]
+                "id" => $poke->id_pokemon,
+                "name" => $poke->name,
             ];
         }
 
@@ -83,6 +83,31 @@ class Pokemon extends Controller
     }
 
     public function catchPokemon(Request $request)
+    {
+        try {
+            $success = false;
+            if ($request->parameter % 2 == 0) {
+                MyPokemon::create([
+                    "id_pokemon" => $request->id,
+                    "name" => $request->name,
+                    "rename_count" => 0
+                ]);
+                $success = true;
+            }
+
+            return \response()->json([
+                "error" => false,
+                "success" => $success
+            ], \http_response_code());
+        } catch (Throwable $t) {
+            return \response()->json([
+                "error" => true,
+                "message" => $t->getMessage()
+            ], \http_response_code());
+        }
+    }
+
+    public function releasePokemon(Request $request)
     {
         try {
             $success = false;
