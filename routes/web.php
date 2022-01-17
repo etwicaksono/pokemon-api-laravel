@@ -17,4 +17,4 @@ Route::get('/', [Pokemon::class, "index"]);
 Route::get('/my-pokemon', [Pokemon::class, "myPokemon"]);
 Route::get('/detail/{id}', [Pokemon::class, "detail"]);
 
-Route::post("/catch-pokemon", [Pokemon::class, "cathPokemon"]);
+Route::post("/catch-pokemon", [Pokemon::class, "catchPokemon"]);
