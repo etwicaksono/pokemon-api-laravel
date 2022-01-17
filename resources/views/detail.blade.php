@@ -20,3 +20,17 @@
 <p class="text-justify">{{ $data["type"] }}</p>
 
 @endsection
+
+@push('js')
+<script>
+    $(function(){
+        $("#btn-catch").on("click",function(){
+            Swal.fire({
+                title: 'Catched!',
+                text: 'This pokemon has catched',
+                icon: 'success',
+                })
+        })
+    })
+</script>
+@endpush

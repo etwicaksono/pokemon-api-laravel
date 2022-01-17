@@ -74,4 +74,9 @@ class Pokemon extends Controller
         ];
         return view('detail', compact("data"));
     }
+
+    public function catchPokemon()
+    {
+        //code here
+    }
 }
