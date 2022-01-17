@@ -25,6 +25,24 @@ class Pokemon extends Controller
         return view('home', compact("data"));
     }
 
+    public function myPokemon()
+    {
+        $response = Http::get("https://pokeapi.co/api/v2/pokemon")->json();
+
+        $data = [];
+        foreach ($response["results"] as $res) {
+            $temp = explode("/", trim($res["url"], "/"));
+            $id = $temp[count($temp) - 1];
+            $data[] = [
+                "id" => $id,
+                "name" => $res["name"],
+                "url" => $res["url"]
+            ];
+        }
+
+        return view('my-pokemon', compact("data"));
+    }
+
 
     public function detail($id)
     {

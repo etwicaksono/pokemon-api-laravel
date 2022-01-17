@@ -1,7 +1,7 @@
-@extends('layout.app',["title"=>"Home"])
+@extends('layout.app',["title"=>"My Pokemon"])
 
 @section('content')
-<p class="h1 my-2">List Pokemon</p>
+<p class="h1 my-2">My Pokemon</p>
 
 <div class="d-flex flex-row justify-content-between flex-wrap">
     @foreach ($data as $item)
@@ -19,14 +19,3 @@
 
 
 @endsection
-
-@push('js')
-<script>
-    Swal.fire({
-    title: 'Error!',
-    text: 'Do you want to continue',
-    icon: 'error',
-    confirmButtonText: 'Cool'
-    })
-</script>
-@endpush
