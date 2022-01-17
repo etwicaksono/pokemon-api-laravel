@@ -59,8 +59,9 @@
                     </li> --}}
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+                        id="search-input">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="btn-search">Search</button>
                 </form>
             </div>
         </nav>
@@ -80,6 +81,47 @@
     </script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/0f853fcb5c.js" crossorigin="anonymous"></script>
+
+    <script>
+        $(function(){
+            let baseurl = "{{ url('') }}/"
+
+            $("#btn-search").on("click",function(){
+                event.preventDefault()
+
+                let search = $("#search-input").val()
+
+                if(search != ""){
+                    $.ajax({
+                        url:"https://pokeapi.co/api/v2/pokemon/" + search,
+                        method:"get",
+                        dataType:"json",
+                        error:function(err){
+                            if(err.responseText == "Not Found"){
+                                Swal.fire({
+                                    title: search + ' Not Found!',
+                                    text:  'Check your keyword!',
+                                    icon: 'warning',
+                                    })
+                            }else{
+                                console.log(err);
+                            }
+                        },success:function(res){
+                            console.log(res);
+                            window.location = baseurl + "detail/" + res.id
+                        }
+                    })
+                }else{
+                    Swal.fire({
+                        title: 'Warning!',
+                        text:  'Input pokemon name!',
+                        icon: 'warning',
+                        })
+                }
+            })
+        })
+    </script>
+
     @stack('js')
 
 </body>
