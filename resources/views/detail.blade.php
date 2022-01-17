@@ -11,7 +11,8 @@
     @endforeach
 </div>
 
-<button class="btn btn-info float-right" id="btn-catch">Catch Pokemon</button>
+<button class="btn btn-info float-right" id="btn-catch" data-id="{{ $data['id'] }}"
+    data-name="{{ $data['name'] }}"><span class="fas fa-circle" id="indicator"></span> Catch Pokemon</button>
 
 <p class="h3 mt-5">Moves</p>
 <p class="text-justify">{{ $data["move"] }}</p>
@@ -24,13 +25,38 @@
 @push('js')
 <script>
     $(function(){
+        let parameter = 0
+
         $("#btn-catch").on("click",function(){
-            Swal.fire({
+            let id = $(this).data("id");
+            let name = $(this).data("name");
+            
+            if(parameter % 2 == 0){
+                Swal.fire({
                 title: 'Catched!',
-                text: 'This pokemon has catched',
+                text: name + ' has catched | ' + id,
                 icon: 'success',
                 })
+            }else{
+                Swal.fire({
+                title: 'Failed!',
+                text: name + ' failed to catch | ' + id,
+                icon: 'warning',
+                })
+            }
         })
+
+
+        setInterval(() => {
+            parameter++;
+            if(parameter % 2 == 0){
+                $("#indicator").css("color","#00ff48")
+            }else{
+                $("#indicator").css("color","#ffffff")
+            }
+
+        }, 1000);
     })
+
 </script>
 @endpush
