@@ -17,12 +17,12 @@
         <button class="btn btn-info float-right ml-5" id="btn-release" data-id="{{ $data['id'] }}"
             data-name="{{ $data['name'] }}">Release Pokemon</button>
 
-        <form class="form-inline my-2 my-lg-0 float-right" id="form-rename">
+        {{-- <form class="form-inline my-2 my-lg-0 float-right" id="form-rename">
             <input class="form-control mr-sm-2" type="text" placeholder="Rename Pokemon" aria-label="Rename Pokemon"
-                id="input-rename">
+                id="input-rename" @if ($data["renamed"]) value="{{ $data['name'] }}" readonly @endif>
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="btn-rename"
                 data-id="{{ $data['id'] }}">Rename</button>
-        </form>
+        </form> --}}
 
         @else
 
@@ -70,7 +70,7 @@
                         text: name + ' has released, returned number '+ res.number + ' is prime number',
                         icon: 'success',
                         }).then(function(){
-                            window.location.reload()
+                            window.location.reload()                            
                         })
                     }else{
                         Swal.fire({
@@ -161,13 +161,71 @@
                 error:function(err){
                     console.log(err)
                 },success:function(res){
+                    console.log(res)
                     if(res.success){
                         Swal.fire({
                         title: 'Catched!',
                         text: name + ' has catched',
                         icon: 'success',
                         }).then(function(){
-                            window.location.reload()
+                            // window.location.reload()
+
+                            Swal.fire({
+                                    title: 'Rename your pokemon',
+                                    input: 'text',
+                                    inputAttributes: {
+                                        autocapitalize: 'off'
+                                    },
+                                    confirmButtonText: 'Rename',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    }).then((result)=>{
+                                        let current_name= $("#current-name").html()
+                                        let new_name = result.value
+
+                                        if(new_name!=""){
+                                            $.ajax({
+                                                headers: {
+                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                },
+                                                url:baseurl+"rename-pokemon",
+                                                dataType:"json",
+                                                data:{
+                                                    id:res.pokemon.id,
+                                                    name:new_name
+                                                },
+                                                method:"post",
+                                                error:function(err){
+                                                    console.log(err)
+                                                },success:function(res){
+                                                    console.log(res)
+                                                    if(res.success){
+                                                        Swal.fire({
+                                                        title: 'Renamed!',
+                                                        text: 'Pokemon has renamed from ' + current_name +' to '+res.name,
+                                                        icon: 'success',
+                                                        }).then(function(){
+                                                            window.location = baseurl + "my-pokemon"
+                                                        })
+                                                    }else{
+                                                        Swal.fire({
+                                                        title: 'Failed!',
+                                                        text: 'Failed to rename pokemon.',
+                                                        icon: 'warning',
+                                                        })
+                                                    }
+                                                }
+                                            })
+                                        }else{
+                                            Swal.fire({
+                                                    title: 'Warning!',
+                                                    text:  'Enter pokemon name!',
+                                                    icon: 'warning',
+                                                    })
+                                        }
+
+                                        console.log(result)
+                                    })
                         })
                     }else{
                         Swal.fire({

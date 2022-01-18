@@ -77,7 +77,8 @@ class Pokemon extends Controller
             "move" => \implode(", ", $move),
             "img" => $img,
             "type" => \implode(", ", $type),
-            "catched" => $catched
+            "catched" => $catched,
+            "renamed" => ($catched && $pokemon->rename_count > 0 ? true : false)
         ];
         return view('detail', compact("data"));
     }
@@ -97,7 +98,8 @@ class Pokemon extends Controller
 
             return \response()->json([
                 "error" => false,
-                "success" => $success
+                "success" => $success,
+                "pokemon" => MyPokemon::latest()->first()
             ], \http_response_code());
         } catch (Throwable $t) {
             return \response()->json([
