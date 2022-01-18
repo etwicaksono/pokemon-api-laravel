@@ -114,7 +114,7 @@
                 }else{
                     Swal.fire({
                         title: 'Warning!',
-                        text:  'Input pokemon name!',
+                        text:  'Enter pokemon name!',
                         icon: 'warning',
                         })
                 }

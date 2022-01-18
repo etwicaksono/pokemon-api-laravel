@@ -91,38 +91,46 @@
             let current_name= $("#current-name").html()
             let new_name = $("#input-rename").val()
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url:baseurl+"rename-pokemon",
-                dataType:"json",
-                data:{
-                    id:id,
-                    name:new_name
-                },
-                method:"post",
-                error:function(err){
-                    console.log(err)
-                },success:function(res){
-                    console.log(res)
-                    if(res.success){
-                        Swal.fire({
-                        title: 'Renamed!',
-                        text: 'Pokemon has renamed from ' + current_name +' to '+res.name,
-                        icon: 'success',
-                        }).then(function(){
-                            window.location.reload()
-                        })
-                    }else{
-                        Swal.fire({
-                        title: 'Failed!',
-                        text: 'Failed to rename pokemon.',
+           if(new_name!=""){
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url:baseurl+"rename-pokemon",
+                    dataType:"json",
+                    data:{
+                        id:id,
+                        name:new_name
+                    },
+                    method:"post",
+                    error:function(err){
+                        console.log(err)
+                    },success:function(res){
+                        console.log(res)
+                        if(res.success){
+                            Swal.fire({
+                            title: 'Renamed!',
+                            text: 'Pokemon has renamed from ' + current_name +' to '+res.name,
+                            icon: 'success',
+                            }).then(function(){
+                                window.location.reload()
+                            })
+                        }else{
+                            Swal.fire({
+                            title: 'Failed!',
+                            text: 'Failed to rename pokemon.',
+                            icon: 'warning',
+                            })
+                        }
+                    }
+                })
+           }else{
+                Swal.fire({
+                        title: 'Warning!',
+                        text:  'Enter pokemon name!',
                         icon: 'warning',
                         })
-                    }
-                }
-            })
+           }
         })
     })
 
