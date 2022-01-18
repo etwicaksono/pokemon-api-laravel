@@ -4,6 +4,7 @@
 <p class="h1 my-2">My Pokemon</p>
 
 <div class="d-flex flex-row justify-content-center flex-wrap">
+    @if (!empty($data))
     @foreach ($data as $item)
     <a href="{{ url('detail/'.$item['id']) }}">
         <div class="card m-2" style="width: 18rem;">
@@ -15,6 +16,9 @@
         </div>
     </a>
     @endforeach
+    @else
+    <p class="h1 text-center mt-5 text-black-50">You don't have any pokemon!</p>
+    @endif
 </div>
 
 
