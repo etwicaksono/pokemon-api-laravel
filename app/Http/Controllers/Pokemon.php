@@ -36,8 +36,13 @@ class Pokemon extends Controller
 
         $data = [];
         foreach ($pokemon as $poke) {
+            $arr = explode("-", $poke->name);
+            if (\count($arr) > 1) array_pop($arr);
+            $name_origin = (is_array($arr) ? implode($arr) : $arr);
             $data[] = [
                 "id" => $poke->id_pokemon,
+                "id_rename" => $poke->id,
+                "name_origin" => $name_origin,
                 "name" => $poke->name,
             ];
         }
