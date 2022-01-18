@@ -72,7 +72,7 @@ class Pokemon extends Controller
         \sort($type);
 
         $data = [
-            "id" => $id,
+            "id" => ($catched ? $pokemon->id : $id),
             "name" => $response["name"],
             "move" => \implode(", ", $move),
             "img" => $img,
@@ -111,18 +111,17 @@ class Pokemon extends Controller
     {
         try {
             $success = false;
-            if ($request->parameter % 2 == 0) {
-                MyPokemon::create([
-                    "id_pokemon" => $request->id,
-                    "name" => $request->name,
-                    "rename_count" => 0
-                ]);
+            $random = \rand(1, 100);
+            if (\isPrime($random)) {
+                $pokemon = MyPokemon::find($request->id);
+                $pokemon->delete($request->id);
                 $success = true;
             }
 
             return \response()->json([
                 "error" => false,
-                "success" => $success
+                "success" => $success,
+                "number" => $random
             ], \http_response_code());
         } catch (Throwable $t) {
             return \response()->json([

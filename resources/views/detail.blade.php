@@ -44,7 +44,7 @@
     $(function(){
         let baseurl = "{{ url('') }}/"
 
-        $("#btn-catch").on("click",function(){
+        $("#btn-release").on("click",function(){
             let id = $(this).data("id");
             let name = $(this).data("name");
 
@@ -65,7 +65,7 @@
                     if(res.success){
                         Swal.fire({
                         title: 'Released!',
-                        text: name + ' has released',
+                        text: name + ' has released, returned number '+ res.number + ' is prime number',
                         icon: 'success',
                         }).then(function(){
                             window.location.reload()
@@ -73,7 +73,7 @@
                     }else{
                         Swal.fire({
                         title: 'Failed!',
-                        text: name + ' failed to catch',
+                        text: name + ' failed to release, returned number '+ res.number + ' is not prime number',
                         icon: 'warning',
                         })
                     }

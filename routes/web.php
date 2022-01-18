@@ -19,3 +19,4 @@ Route::get('/detail/{id}', [Pokemon::class, "detail"]);
 
 Route::post("/catch-pokemon", [Pokemon::class, "catchPokemon"]);
 Route::post("/release-pokemon", [Pokemon::class, "releasePokemon"]);
+Route::post("/rename-pokemon", [Pokemon::class, "renamePokemon"]);
