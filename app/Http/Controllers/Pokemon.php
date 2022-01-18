@@ -73,7 +73,7 @@ class Pokemon extends Controller
 
         $data = [
             "id" => ($catched ? $pokemon->id : $id),
-            "name" => $response["name"],
+            "name" => ($catched ? $pokemon->name : $response["name"]),
             "move" => \implode(", ", $move),
             "img" => $img,
             "type" => \implode(", ", $type),
@@ -122,6 +122,33 @@ class Pokemon extends Controller
                 "error" => false,
                 "success" => $success,
                 "number" => $random
+            ], \http_response_code());
+        } catch (Throwable $t) {
+            return \response()->json([
+                "error" => true,
+                "message" => $t->getMessage()
+            ], \http_response_code());
+        }
+    }
+
+    public function renamePokemon(Request $request)
+    {
+        try {
+            $success = false;
+
+            $pokemon = MyPokemon::find($request->id);
+
+            $new_name = $request->name . "-" . \getFibonacci($pokemon->rename_count + 1);
+            $pokemon->rename_count++;
+
+            $pokemon->name = $new_name;
+            $pokemon->save();
+            $success = true;
+
+            return \response()->json([
+                "error" => false,
+                "success" => $success,
+                "name" => $new_name
             ], \http_response_code());
         } catch (Throwable $t) {
             return \response()->json([

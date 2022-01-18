@@ -1,7 +1,7 @@
 @extends('layout.app',["title"=>"Detail Pokemon","csrf"=>true])
 
 @section('content')
-<p class="h1 mt-3">{{ $data["name"] }}</p>
+<p class="h1 mt-3" id="current-name">{{ $data["name"] }}</p>
 
 <div class="d-flex flex-row justify-content-between flex-wrap mb-5">
     @foreach ($data["img"] as $item)
@@ -18,8 +18,10 @@
             data-name="{{ $data['name'] }}">Release Pokemon</button>
 
         <form class="form-inline my-2 my-lg-0 float-right" id="form-rename">
-            <input class="form-control mr-sm-2" type="text" placeholder="Rename Pokemon" aria-label="Rename Pokemon">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rename</button>
+            <input class="form-control mr-sm-2" type="text" placeholder="Rename Pokemon" aria-label="Rename Pokemon"
+                id="input-rename">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="btn-rename"
+                data-id="{{ $data['id'] }}">Rename</button>
         </form>
 
         @else
@@ -44,9 +46,9 @@
     $(function(){
         let baseurl = "{{ url('') }}/"
 
+        // release pokemon
         $("#btn-release").on("click",function(){
             let id = $(this).data("id");
-            let name = $(this).data("name");
 
             $.ajax({
                 headers: {
@@ -55,13 +57,13 @@
                 url:baseurl+"release-pokemon",
                 dataType:"json",
                 data:{
-                    id:id,
-                    name:name,
+                    id:id
                 },
                 method:"post",
                 error:function(err){
                     console.log(err)
                 },success:function(res){
+                    
                     if(res.success){
                         Swal.fire({
                         title: 'Released!',
@@ -80,6 +82,48 @@
                 }
             })
         })
+
+        // rename pokemon
+        $("#btn-rename").on("click",function(){
+            event.preventDefault()
+
+            let id = $(this).data("id");
+            let current_name= $("#current-name").html()
+            let new_name = $("#input-rename").val()
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url:baseurl+"rename-pokemon",
+                dataType:"json",
+                data:{
+                    id:id,
+                    name:new_name
+                },
+                method:"post",
+                error:function(err){
+                    console.log(err)
+                },success:function(res){
+                    console.log(res)
+                    if(res.success){
+                        Swal.fire({
+                        title: 'Renamed!',
+                        text: 'Pokemon has renamed from ' + current_name +' to '+res.name,
+                        icon: 'success',
+                        }).then(function(){
+                            window.location.reload()
+                        })
+                    }else{
+                        Swal.fire({
+                        title: 'Failed!',
+                        text: 'Failed to rename pokemon.',
+                        icon: 'warning',
+                        })
+                    }
+                }
+            })
+        })
     })
 
 </script>
@@ -89,6 +133,7 @@
         let baseurl = "{{ url('') }}/"
         let parameter = 0
 
+        // catch pokemon
         $("#btn-catch").on("click",function(){
             let id = $(this).data("id");
             let name = $(this).data("name");
